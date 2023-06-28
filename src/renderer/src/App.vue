@@ -1,26 +1,18 @@
 <template>
-  <div class="m-5">
-    <a-input-search v-model:value="savedPath" placeholder="文件保存路径" @search="onSearch">
-      <template #enterButton>
-        <a-button type="primary">选择文件夹</a-button>
-      </template>
-    </a-input-search>
-    <a-row class="mt-3" :gutter="[16, 16]">
-      <a-col v-for="n in 6" :key="n" :span="6">
-        <ClashLinkItem />
-      </a-col>
-    </a-row>
-  </div>
+  <a-config-provider :locale="locale">
+    <Main />
+  </a-config-provider>
 </template>
 
 <script lang="ts" setup="setup">
-import ClashLinkItem from './components/ClashLinkItem.vue'
+import { ref } from 'vue'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+import Main from './Main.vue'
 
-const savedPath = ref<string>('')
-
-const onSearch = (savedPath: string): void => {
-  console.log('savedPath is: ', savedPath)
-}
+const locale = ref(zhCN)
+dayjs.locale('zh-cn')
 </script>
 
 <style lang="scss" scoped></style>
