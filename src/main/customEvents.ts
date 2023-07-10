@@ -25,7 +25,7 @@ ipcMain.handle('open-dir-dialog', () => {
 // 并发爬取
 ipcMain.handle('concurrent-crawling', () => {
   const { registerUrl, saveClashLinkFile, userCenterUrl, exportDir } = config
-  return concurrentWebCrawling(registerUrl, userCenterUrl, exportDir, saveClashLinkFile, 1, 8)
+  return concurrentWebCrawling(registerUrl, userCenterUrl, exportDir, saveClashLinkFile, 1, 2)
 })
 
 // 复制订阅链接

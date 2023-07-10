@@ -1,5 +1,4 @@
-import fs from 'fs'
-import util from 'util'
+import { promises as fs } from 'fs'
 import * as puppeteer from 'puppeteer'
 import { letters, mailProviders, failureConfig } from './constants'
 
@@ -120,9 +119,8 @@ export async function writeRemoteFile(filePath: string, link?: string | null): P
   const fileName = getFileNameFromPath(filePath)
   const response = await fetch(link)
   const text = await response.text()
-
   try {
-    await fs.writeFileSync(filePath, text)
+    await fs.writeFile(filePath, text)
     console.log(`文件 ${fileName} 已保存成功`)
   } catch (error) {
     console.error(`文件 ${fileName} 写入失败: ${error}`)
@@ -136,25 +134,15 @@ export async function writeRemoteFile(filePath: string, link?: string | null): P
  * @param {string} filePath - 文件路径。
  * @param {string} content - 要保存的内容。
  * @param {boolean} [isCover] - 是否覆盖文件。如果为true，则覆盖文件；如果为false或未提供，则将内容追加到文件末尾。
- * @returns {Promise<string>} - 返回一个Promise，表示操作的结果消息。
  */
-export async function saveContent(
-  filePath: string,
-  content: string,
-  isCover?: boolean
-): Promise<string> {
-  return new Promise((resolve, reject) => {
+export async function saveContent(filePath: string, content: string, isCover?: boolean) {
+  try {
     const action = isCover ? fs.writeFile : fs.appendFile
-    action(filePath, `${content}\n`, (err) => {
-      if (err) {
-        console.error('无法将内容添加到文件：', err)
-        reject(err)
-      } else {
-        console.log('内容成功添加到文件！')
-        resolve('内容成功添加到文件！')
-      }
-    })
-  })
+    return await action(filePath, `${content}\n`)
+  } catch (err) {
+    console.error('无法将内容添加到文件：', err)
+    throw err
+  }
 }
 
 /**
@@ -165,8 +153,7 @@ export async function saveContent(
  */
 export async function copyLatestClashLinks(filePath: string): Promise<void> {
   try {
-    const readFileAsync = util.promisify(fs.readFile)
-    const data = await readFileAsync(filePath, 'utf8')
+    const data = await fs.readFile(filePath, 'utf8')
     console.log('文件内容读取成功！')
     // 由于在clipboardy中使用了require语句导入了一个ES模块（clipboardy），而当前的环境不支持直接在CommonJS模块中使用require导入ES模块。
     const clipboardy = await import('clipboardy')
