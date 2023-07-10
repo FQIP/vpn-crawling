@@ -15,8 +15,6 @@
 </template>
 
 <script lang="ts" setup="setup">
-import { ref } from 'vue'
-
 const saveDir = ref<string>()
 
 const onChange = (e: InputEvent): void => {

@@ -128,3 +128,50 @@ export async function writeRemoteFile(filePath: string, link?: string | null): P
     throw error
   }
 }
+
+/**
+ * 将内容保存到文件中。
+ *
+ * @param {string} filePath - 文件路径。
+ * @param {string} content - 要保存的内容。
+ * @param {boolean} [isCover] - 是否覆盖文件。如果为true，则覆盖文件；如果为false或未提供，则将内容追加到文件末尾。
+ * @returns {Promise<string>} - 返回一个Promise，表示操作的结果消息。
+ */
+export async function saveContent(
+  filePath: string,
+  content: string,
+  isCover?: boolean
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const action = isCover ? fs.writeFile : fs.appendFile
+    action(filePath, `${content}\n`, (err) => {
+      if (err) {
+        console.error('无法将内容添加到文件：', err)
+        reject(err)
+      } else {
+        console.log('内容成功添加到文件！')
+        resolve('内容成功添加到文件！')
+      }
+    })
+  })
+}
+
+/**
+ * 复制最新的Clash链接到指定文件。
+ *
+ * @param {string} filePath - 目标文件路径。
+ * @returns {Promise<string>} - 返回一个Promise，表示操作的结果消息。
+ */
+export async function copyLatestClashLinks(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        console.error('文件内容读取失败：', err)
+        reject(err)
+      } else {
+        console.log('文件内容读取成功！')
+        resolve(data)
+      }
+    })
+  })
+}

@@ -1,6 +1,7 @@
 import { app, ipcMain, shell, dialog } from 'electron'
 import { concurrentWebCrawling } from '../webs-crawling/cyanmori.com/index'
 import config from '../webs-crawling/shared/config'
+import { copyLatestClashLinks } from '../webs-crawling/shared/utils'
 
 // 打开本地文件
 ipcMain.on('open-path', (_, path) => {
@@ -23,6 +24,12 @@ ipcMain.handle('open-dir-dialog', () => {
 
 // 并发爬取
 ipcMain.handle('concurrent-crawling', () => {
-  const { registerUrl, userCenterUrl, exportDir } = config
-  return concurrentWebCrawling(registerUrl, userCenterUrl, exportDir, 1, 8)
+  const { registerUrl, saveClashLinkFile, userCenterUrl, exportDir } = config
+  return concurrentWebCrawling(registerUrl, userCenterUrl, exportDir, saveClashLinkFile, 1, 8)
+})
+
+// 复制订阅链接
+ipcMain.handle('copy-latest-clash-links', () => {
+  const { saveClashLinkFile } = config
+  return copyLatestClashLinks(saveClashLinkFile)
 })

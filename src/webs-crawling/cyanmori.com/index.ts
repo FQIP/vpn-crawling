@@ -1,6 +1,12 @@
 import path from 'path'
 import * as puppeteer from 'puppeteer'
-import { generateRandomEmail, launchBrowser, crawlPage, writeRemoteFile } from '../shared/utils'
+import {
+  generateRandomEmail,
+  launchBrowser,
+  crawlPage,
+  writeRemoteFile,
+  saveContent
+} from '../shared/utils'
 
 /**
  * 注册函数，使用 Puppeteer 在页面上注册用户。
@@ -61,16 +67,17 @@ async function waitForRegistrationTip(page: puppeteer.Page): Promise<void> {
 async function getClashSubscriptionLink(
   page: puppeteer.Page,
   userCenterUrl: string
-): Promise<string | null | undefined> {
+): Promise<string> {
   // 跳转用户中心页
   await page.goto(userCenterUrl)
   // 点击签到
   const checkinButton = await page.waitForSelector('#checkin')
   await checkinButton?.click()
   // 获取clash订阅链接
-  return await page.evaluate(() => {
+  const clashLink = await page.evaluate(() => {
     return document.querySelector('.dropdown-item.copy-text')?.getAttribute('data-clipboard-text')
   })
+  return clashLink || ''
 }
 
 /**
@@ -79,6 +86,7 @@ async function getClashSubscriptionLink(
  * @param {string} registerUrl - 注册页面的URL。
  * @param {string} userCenterUrl - 用户中心页面的URL。
  * @param {string} saveDirectory - 保存文件的目录。
+ * @param {string} saveClashLinkFile - 保存订阅链接地址的文件路径。
  * @param {number} startIndex - 起始索引。
  * @param {number} endIndex - 结束索引。
  * @returns {Promise<void>} 当所有爬取任务完成时解析的Promise。
@@ -89,10 +97,12 @@ export async function concurrentWebCrawling(
   registerUrl: string,
   userCenterUrl: string,
   saveDirectory: string,
+  saveClashLinkFile: string,
   startIndex: number,
   endIndex: number
 ): Promise<void> {
-  const browserInstances = [] as puppeteer.Browser[]
+  const browserInstances: puppeteer.Browser[] = []
+  const clashLinks: string[] = []
   try {
     await Promise.allSettled(
       Array.from({ length: endIndex - startIndex + 1 }, async (_, index) => {
@@ -104,6 +114,10 @@ export async function concurrentWebCrawling(
             await waitForRegistrationTip(page)
             return getClashSubscriptionLink(page, userCenterUrl)
           })
+          clashLinks.push(clashLink)
+          console.error(
+            `第${startIndex + index}个爬虫任务执行成功，爬取到的订阅链接为：${clashLink}`
+          )
           const filePath = path.join(saveDirectory, `${startIndex + index}.yaml`)
           return writeRemoteFile(filePath, clashLink)
         } catch (error) {
@@ -115,5 +129,6 @@ export async function concurrentWebCrawling(
   } finally {
     console.log('爬虫结束，关闭浏览器')
     browserInstances.forEach((browser) => browser.close())
+    saveContent(saveClashLinkFile, clashLinks.join('\n'), true)
   }
 }

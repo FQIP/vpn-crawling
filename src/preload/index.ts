@@ -11,6 +11,9 @@ const api = {
   },
   concurrentCrawling(): Promise<void> {
     return ipcRenderer.invoke('concurrent-crawling')
+  },
+  copyLatestClashLinks(): Promise<string> {
+    return ipcRenderer.invoke('copy-latest-clash-links')
   }
 }
 
