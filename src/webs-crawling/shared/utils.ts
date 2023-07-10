@@ -1,4 +1,5 @@
 import fs from 'fs'
+import util from 'util'
 import * as puppeteer from 'puppeteer'
 import { letters, mailProviders, failureConfig } from './constants'
 
@@ -162,16 +163,17 @@ export async function saveContent(
  * @param {string} filePath - 目标文件路径。
  * @returns {Promise<string>} - 返回一个Promise，表示操作的结果消息。
  */
-export async function copyLatestClashLinks(filePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        console.error('文件内容读取失败：', err)
-        reject(err)
-      } else {
-        console.log('文件内容读取成功！')
-        resolve(data)
-      }
-    })
-  })
+export async function copyLatestClashLinks(filePath: string): Promise<void> {
+  try {
+    const readFileAsync = util.promisify(fs.readFile)
+    const data = await readFileAsync(filePath, 'utf8')
+    console.log('文件内容读取成功！')
+    // 由于在clipboardy中使用了require语句导入了一个ES模块（clipboardy），而当前的环境不支持直接在CommonJS模块中使用require导入ES模块。
+    const clipboardy = await import('clipboardy')
+    await clipboardy.default.writeSync(data)
+    console.log('文件内容复制成功！')
+  } catch (err) {
+    console.error('文件内容读取或复制失败：', err)
+    throw err
+  }
 }

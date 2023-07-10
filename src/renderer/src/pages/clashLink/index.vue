@@ -7,9 +7,7 @@
       <a-input-number v-model:value="endIndex" class="mr-5" :min="1" :max="20" />
       <a-button type="primary" danger @click="removeAll">全部删除</a-button>
       <a-button type="primary" :loading="isFetching" @click="toFetch">开始获取</a-button>
-      <a-button type="primary" :loading="isCopying" @click="copyClashLinks">
-        复制订阅链接
-      </a-button>
+      <a-button type="primary" @click="copyClashLinks"> 复制订阅链接 </a-button>
     </a-space>
     <div ref="containerRef">
       <div v-for="(rowLinks, rowIndex) in clashList" :key="rowIndex" class="flex">
@@ -31,14 +29,11 @@ import { createVNode } from 'vue'
 import { Modal, message } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { debounce, chunk } from 'lodash-es'
-import { useClipboard } from '@vueuse/core'
 import ClashLinkItem from './components/ClashLinkItem.vue'
 
 const list = Array.from({ length: 16 }, () => {
   return 'https://www.qilin2.com/api/v1/client/subscribe?token=b315fd49d98f5153f2da832817c0109e'
 })
-
-const { copy, copied, isSupported } = useClipboard()
 
 const containerRef = ref<HTMLElement>()
 const itemRef = ref<HTMLElement>()
@@ -47,7 +42,6 @@ const endIndex = ref<number>(10)
 const clashList = ref<string[][]>([])
 const gutter = ref<number>(0)
 const isFetching = ref<boolean>(false)
-const isCopying = ref<boolean>(false)
 
 const resizeLayout = (): void => {
   const cw = containerRef.value?.offsetWidth || 0
@@ -87,21 +81,12 @@ const toFetch = async (): Promise<void> => {
 }
 
 const copyClashLinks = async () => {
-  if (isSupported.value) {
-    try {
-      isCopying.value = true
-      const clashLinks = await window.api.copyLatestClashLinks()
-      await copy(clashLinks)
-      if (copied.value) {
-        message.success('复制成功', 1)
-      }
-    } catch (error) {
-      console.log(error)
-    } finally {
-      isCopying.value = false
-    }
-  } else {
-    message.error('浏览器不支持复制到剪贴板')
+  try {
+    await window.api.copyLatestClashLinks()
+    message.success('复制成功', 1)
+  } catch (error) {
+    console.log(error)
+    message.error('复制失败', 1)
   }
 }
 </script>
