@@ -29,13 +29,13 @@
 import { createVNode } from 'vue'
 import { message, Modal } from 'ant-design-vue'
 import {
-  DeleteFilled,
   CopyOutlined,
-  ExportOutlined,
-  ExclamationCircleOutlined
+  DeleteFilled,
+  ExclamationCircleOutlined,
+  ExportOutlined
 } from '@ant-design/icons-vue'
-import { useQRCode } from '@vueuse/integrations/useQRCode'
 import { useClipboard } from '@vueuse/core'
+import { useQRCode } from '@vueuse/integrations/useQRCode'
 
 const props = defineProps<{ index: number; clashLink: string }>()
 

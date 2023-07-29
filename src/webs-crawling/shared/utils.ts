@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import * as puppeteer from 'puppeteer'
-import { letters, mailProviders, failureConfig } from './constants'
+import { failureConfig, letters, mailProviders } from './constants'
 
 function getRandomChar(arr): string {
   return arr[Math.floor(Math.random() * arr.length)]
@@ -125,23 +125,6 @@ export async function writeRemoteFile(filePath: string, link?: string | null): P
   } catch (error) {
     console.error(`文件 ${fileName} 写入失败: ${error}`)
     throw error
-  }
-}
-
-/**
- * 将内容保存到文件中。
- *
- * @param {string} filePath - 文件路径。
- * @param {string} content - 要保存的内容。
- * @param {boolean} [isCover] - 是否覆盖文件。如果为true，则覆盖文件；如果为false或未提供，则将内容追加到文件末尾。
- */
-export async function saveContent(filePath: string, content: string, isCover?: boolean) {
-  try {
-    const action = isCover ? fs.writeFile : fs.appendFile
-    return await action(filePath, `${content}\n`)
-  } catch (err) {
-    console.error('无法将内容添加到文件：', err)
-    throw err
   }
 }
 

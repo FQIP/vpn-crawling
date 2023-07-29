@@ -28,7 +28,7 @@
 import { createVNode } from 'vue'
 import { Modal, message } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
-import { debounce, chunk } from 'lodash-es'
+import { chunk, debounce } from 'lodash-es'
 import ClashLinkItem from './components/ClashLinkItem.vue'
 
 const list = Array.from({ length: 16 }, () => {
@@ -72,21 +72,21 @@ const removeAll = (): void => {
 const toFetch = async (): Promise<void> => {
   try {
     isFetching.value = true
-    await window.api.concurrentCrawling()
+    await window.api.concurrentCrawlingCyanmori()
   } catch (error) {
-    console.log(error)
+    throw new Error(error as string)
   } finally {
     isFetching.value = false
   }
 }
 
-const copyClashLinks = async () => {
+const copyClashLinks = async (): Promise<void> => {
   try {
-    await window.api.copyLatestClashLinks()
+    await window.api.copyLatestClashLinksCyanmori()
     message.success('复制成功', 1)
   } catch (error) {
-    console.log(error)
     message.error('复制失败', 1)
+    throw new Error(error as string)
   }
 }
 </script>

@@ -1,12 +1,7 @@
+import { promises as fs } from 'fs'
 import path from 'path'
 import * as puppeteer from 'puppeteer'
-import {
-  generateRandomEmail,
-  launchBrowser,
-  crawlPage,
-  writeRemoteFile,
-  saveContent
-} from '../shared/utils'
+import { crawlPage, generateRandomEmail, launchBrowser, writeRemoteFile } from '../shared/utils'
 
 /**
  * 注册函数，使用 Puppeteer 在页面上注册用户。
@@ -106,6 +101,7 @@ export async function concurrentWebCrawling(
   try {
     await Promise.allSettled(
       Array.from({ length: endIndex - startIndex + 1 }, async (_, index) => {
+        const cIndex = startIndex + index
         try {
           const browser = await launchBrowser()
           browserInstances.push(browser)
@@ -114,14 +110,12 @@ export async function concurrentWebCrawling(
             await waitForRegistrationTip(page)
             return getClashSubscriptionLink(page, userCenterUrl)
           })
-          clashLinks.push(clashLink)
-          console.error(
-            `第${startIndex + index}个爬虫任务执行成功，爬取到的订阅链接为：${clashLink}`
-          )
-          const filePath = path.join(saveDirectory, `${startIndex + index}.yaml`)
+          clashLinks[index] = `${cIndex}---：\n${clashLink}`
+          console.error(`第${cIndex}个爬虫任务执行成功，爬取到的订阅链接为：${clashLink}`)
+          const filePath = path.join(saveDirectory, `${cIndex}.yaml`)
           return writeRemoteFile(filePath, clashLink)
         } catch (error) {
-          console.error(`第${startIndex + index}个爬虫任务执行失败，失败详情：${error}`)
+          console.error(`第${cIndex}个爬虫任务执行失败，失败详情：${error}`)
           throw error
         }
       })
@@ -129,6 +123,6 @@ export async function concurrentWebCrawling(
   } finally {
     console.log('爬虫结束，关闭浏览器')
     browserInstances.forEach((browser) => browser.close())
-    saveContent(saveClashLinkFile, clashLinks.join('\n'), true)
+    fs.writeFile(saveClashLinkFile, clashLinks.join('\n'))
   }
 }

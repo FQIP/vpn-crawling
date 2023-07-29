@@ -11,6 +11,7 @@ import 'dayjs/locale/zh-cn'
 import Main from './Main.vue'
 
 const locale = ref(zhCN)
+// eslint-disable-next-line import/no-named-as-default-member
 dayjs.locale('zh-cn')
 </script>
 
