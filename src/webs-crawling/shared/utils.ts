@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs'
+import path from 'path'
 import * as puppeteer from 'puppeteer'
 import { failureConfig, letters, mailProviders } from './constants'
 
@@ -145,5 +146,30 @@ export async function copyLatestClashLinks(filePath: string): Promise<void> {
   } catch (err) {
     console.error('文件内容读取或复制失败：', err)
     throw err
+  }
+}
+
+/**
+ * 拷贝文件夹到指定目录
+ * @param {string} src - 源文件夹路径
+ * @param {string} dest - 目标文件夹路径
+ * @returns {Promise<void>}
+ */
+export async function copyDir(src, dest) {
+  try {
+    await fs.mkdir(dest, { recursive: true })
+    const files = await fs.readdir(src)
+    for (const file of files) {
+      const srcPath = path.join(src, file)
+      const destPath = path.join(dest, file)
+      const stat = await fs.stat(srcPath)
+      if (stat.isDirectory()) {
+        await copyDir(srcPath, destPath)
+      } else {
+        await fs.copyFile(srcPath, destPath)
+      }
+    }
+  } catch (error) {
+    console.error(`复制错误：${error}`)
   }
 }
