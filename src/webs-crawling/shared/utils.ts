@@ -125,7 +125,6 @@ export async function writeRemoteFile(filePath: string, link?: string | null): P
     console.log(`文件 ${fileName} 已保存成功`)
   } catch (error) {
     console.error(`文件 ${fileName} 写入失败: ${error}`)
-    throw error
   }
 }
 

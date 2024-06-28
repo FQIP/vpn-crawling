@@ -133,7 +133,9 @@ export async function concurrentWebCrawling(
     await Promise.allSettled(
       Array.from({ length: endIndex - startIndex + 1 }, async (_, index) => {
         const cIndex = startIndex + index
+        const filePath = path.join(saveDirectory, `${cIndex}.yaml`)
         try {
+          fs.unlink(filePath)
           const browser = await launchBrowser()
           browserInstances.push(browser)
           const clashLink = await crawlPage(browser, registerUrl, async (page) => {
@@ -143,11 +145,9 @@ export async function concurrentWebCrawling(
           })
           clashLinks[index] = `${cIndex}---：\n${clashLink}`
           console.error(`第${cIndex}个爬虫任务执行成功，爬取到的订阅链接为：${clashLink}`)
-          const filePath = path.join(saveDirectory, `${cIndex}.yaml`)
-          return writeRemoteFile(filePath, clashLink)
+          await writeRemoteFile(filePath, clashLink)
         } catch (error) {
           console.error(`第${cIndex}个爬虫任务执行失败，失败详情：${error}`)
-          throw error
         }
       })
     )

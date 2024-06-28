@@ -8,5 +8,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.tsdk": "./node_modules/typescript/lib"
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "livePreview.defaultPreviewPath": "/readme/1.html"
+  // "eslint.workingDirectories": ["./vpn-crawling"]
 }

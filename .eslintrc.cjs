@@ -16,7 +16,9 @@ module.exports = {
     'plugin:import/typescript',
     'eslint:recommended',
     '@vue/eslint-config-typescript/recommended',
-    '@vue/eslint-config-prettier'
+    '@vue/eslint-config-prettier',
+    '@electron-toolkit/eslint-config-ts/recommended',
+    '@electron-toolkit/eslint-config-prettier'
   ],
   rules: {
     '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
@@ -28,36 +30,20 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'vue/require-default-prop': 'off',
     'vue/multi-word-component-names': 'off',
-    // "sort-keys": ["error", "asc", {"caseSensitive": true, "natural": false, "minKeys": 2}]
     'import/order': [
-      'error',
+      ERR,
       {
-        // 对导入模块进行分组
-        groups: [
-          'builtin',
-          'external',
-          ['internal', 'sibling', 'parent', 'index', 'object', 'type'],
-          'unknown'
-        ],
-        // 通过路径自定义分组
+        alphabetize: { order: 'asc', caseInsensitive: false },
         pathGroups: [
           {
-            // pattern：当前组中模块的最短路径匹配
             pattern: 'vue*',
             group: 'builtin',
             position: 'before'
           },
           {
-            // pattern：当前组中模块的最短路径匹配
-            pattern: 'react*',
-            group: 'builtin',
-            position: 'before'
-          },
-          {
-            // pattern：当前组中模块的最短路径匹配
-            pattern: 'ant*',
-            group: 'builtin',
-            position: 'before'
+            pattern: '{components,hooks,utils,constants,assets,types}/**',
+            group: 'external',
+            position: 'after'
           },
           {
             // pattern：当前组中模块的最短路径匹配
@@ -66,15 +52,9 @@ module.exports = {
             position: 'after'
           }
         ],
-        // 这个需要加上，否则pathGroups配置将不能生效
-        pathGroupsExcludedImportTypes: [],
-        // newlines-between 不同组之间是否进行换行
-        // 'newlines-between': 'always',
-        // alphabetize 根据字母顺序对每个组内的顺序进行排序
-        alphabetize: {
-          order: 'asc',
-          caseInsensitive: true
-        }
+        pathGroupsExcludedImportTypes: ['vue', 'electron', '@electron-toolkit'],
+        groups: ['builtin', 'external', 'internal', 'index', 'sibling', 'parent', 'object', 'type'],
+        warnOnUnassignedImports: true
       }
     ]
   },

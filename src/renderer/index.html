@@ -1,16 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Electron</title>
+    <title>配置化爬虫桌面端</title>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; img-src 'self' data: base64; script-src 'self'; style-src 'self' 'unsafe-inline'"
     />
+    <style type="text/css">
+      .titlebar-drag-region {
+        top: 0;
+        left: 0;
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 23px;
+        z-index: -1;
+        pointer-events: none;
+        -webkit-app-region: drag;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- <div class="titlebar-drag-region"></div> -->
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>

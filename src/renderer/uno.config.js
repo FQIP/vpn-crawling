@@ -1,8 +1,10 @@
-// uno.config.js
-import { defineConfig, presetUno } from 'unocss'
+import { defineConfig, presetAttributify, presetUno } from 'unocss'
+import { presetScrollbarHide } from 'unocss-preset-scrollbar-hide'
 
 export default defineConfig({
   presets: [
-    presetUno() // 添加 UnoCSS 的默认样式预设
+    presetAttributify(), // required when using attributify mode
+    presetUno(), // required
+    presetScrollbarHide()
   ]
 })

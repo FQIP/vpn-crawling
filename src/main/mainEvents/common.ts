@@ -1,5 +1,4 @@
 import { app, ipcMain, shell, dialog } from 'electron'
-import '../webs-crawling/cyanmori.com/mainEvents'
 
 // 打开本地文件
 ipcMain.on('open-path', (_, path) => {

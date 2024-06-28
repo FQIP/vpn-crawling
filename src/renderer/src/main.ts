@@ -1,7 +1,14 @@
 import { createApp } from 'vue'
+import { message } from 'ant-design-vue'
 import App from './App.vue'
-import 'virtual:uno.css'
-import 'ant-design-vue/es/message/style/index.css'
-import 'ant-design-vue/es/modal/style/index.css'
+import pinia from '@renderer/store/index'
+import 'dayjs/locale/zh-cn'
+import 'uno.css'
+import '@unocss/reset/sanitize/sanitize.css'
+import '@unocss/reset/sanitize/assets.css'
 
-createApp(App).mount('#app')
+message.config({
+  top: `200px`
+})
+
+createApp(App).use(pinia).mount('#app')

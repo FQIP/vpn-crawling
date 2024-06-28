@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frosted Glass Effect Example</title>
+    <style>
+      body {
+        background-image: url('https://picsum.photos/536/354'); /* 设置背景图片 */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .container {
+        position: relative;
+        width: 80%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.5); /* 设置背景颜色和透明度 */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px); /* 应用背景模糊滤镜 */
+      }
+
+      .content {
+        color: white;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <h1>Frosted Glass Effect</h1>
+        <p>这是一个毛玻璃效果的示例，背景被模糊以突出前景内容。</p>
+      </div>
+    </div>
+  </body>
+</html>

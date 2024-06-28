@@ -1,40 +1,17 @@
 <template>
-  <a-layout>
-    <a-layout-sider class="h-full fixed border-r border-solid border-slate-200" theme="light">
-      <a-menu v-model:selectedKeys="selectedKeys" mode="inline" class="border-0">
-        <a-menu-item key="1">
-          <bars-outlined />
-          <span>订阅列表</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <setting-outlined />
-          <span>基础设置</span>
-        </a-menu-item>
-      </a-menu>
-    </a-layout-sider>
-    <a-layout-content class="h-full py-5 bg-white" style="padding-left: 200px">
-      <div class="h-full overflow-scroll">
-        <transition>
-          <keep-alive>
-            <component :is="comp" />
-          </keep-alive>
-        </transition>
-      </div>
-    </a-layout-content>
-  </a-layout>
+  <div class="flex flex-col h-screen w-screen p-2 gap-y-2 bg-gray-200">
+    <ConfigList class="h-auto w-full" />
+    <div class="h-full overflow-hidden grid grid-cols-5 gap-2">
+      <Terminal class="col-span-3 h-full" />
+      <CrawlResult class="col-span-2 w-full h-full overflow-hidden" />
+    </div>
+  </div>
 </template>
-<script setup lang="ts">
-import { ref } from 'vue'
-import { SettingOutlined, BarsOutlined } from '@ant-design/icons-vue'
-import ClashLink from './pages/clashLink/index.vue'
-import Setting from './pages/setting/index.vue'
 
-const components = {
-  1: ClashLink,
-  2: Setting
-}
-
-const selectedKeys = ref<string[]>(['1'])
-
-const comp = computed(() => components[selectedKeys.value[0]])
+<script lang="ts" setup="setup">
+import ConfigList from '@renderer/components/ConfigList/index.vue'
+import CrawlResult from '@renderer/components/CrawlResult/index.vue'
+import Terminal from '@renderer/components/Terminal/index.vue'
 </script>
+
+<style lang="scss" scoped></style>

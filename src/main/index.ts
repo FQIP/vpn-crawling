@@ -1,16 +1,22 @@
-import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { app, shell, BrowserWindow } from 'electron'
 import icon from '../../resources/icon.png?asset'
 import './mainEvents'
+
+app.setName('配置化爬虫桌面端')
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 940,
+    height: 600,
+    minWidth: 940, // 设置窗口的最小宽度
+    minHeight: 600, // 设置窗口的最小高度
     show: false,
     autoHideMenuBar: true,
+    // titleBarStyle: 'hidden', // 隐藏标题栏
+    // titleBarOverlay: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
