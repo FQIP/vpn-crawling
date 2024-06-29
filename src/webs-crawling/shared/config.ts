@@ -1,7 +1,7 @@
 const config = {
-  exportDir: '/Users/fangqipeng/.config/clash',
-  copyDirectory: '/Users/fangqipeng/Downloads/clash_files',
-  saveClashLinkFile: '/Users/fangqipeng/.config/clash/latestLinks.text',
+  exportDir: '/Users/fnqip/.config/clash',
+  copyDirectory: '/Users/fnqip/Downloads/clash_files',
+  saveClashLinkFile: '/Users/fnqip/.config/clash/latestLinks.text',
   // 链接一
   registerUrl: 'https://cccc.gg/auth/register',
   userCenterUrl: 'https://cccc.gg/user'
